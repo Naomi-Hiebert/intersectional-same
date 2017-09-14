@@ -3,17 +3,16 @@
 class Block:
 
 	def __init__(self):
-		self._color = [0xFF, 0xFF, 0xFF]
+		self._color1 = [0xFF, 0xFF, 0xFF]
 		self._dirty = True
+		self._visible = True
 
-	def setColor(self, value):
+	def setColor1(self, value):
 		self._dirty = True
-		self._color = value
+		self._color1 = value
 
-	def getColor(self):
-		return self._color
-
-	color = property(getColor, setColor)
+	def getColor1(self):
+		return self._color1
 
 	def getDirty(self):
 		return self._dirty
@@ -21,5 +20,16 @@ class Block:
 	def clean(self):
 		_dirty = False
 
+	def getVisible(self):
+		return self._visible
+
+	def hide(self):
+		_visible = False
+
+	def show(self):
+		_visible = True
+
+	color1 = property(getColor1, setColor1)
 	dirty = property(getDirty)
+	visible = property(getVisible)
 	

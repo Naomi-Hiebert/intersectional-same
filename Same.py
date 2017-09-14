@@ -1,57 +1,39 @@
 import pyglet
 import Block
+import BlockArray
 import random
 
 window = pyglet.window.Window()
 
-blockVertices = [	100, 100, 100, 400,
-					500, 400, 500, 100]
+pyglet.gl.glPointSize(8.0)
 
-blockColors = [	0x00, 0xFF, 0xFF,
-				0x00, 0xFF, 0xFF]
-
-flag = pyglet.graphics.vertex_list(4, 'v2f', 'c3B')
-flag.vertices = blockVertices
-flag.colors = blockColors + blockColors
-
-pyglet.gl.glPointSize(10.0)
-
-blocksX = 6
-blocksY = 5
-
-blocks = [None] * blocksX
+blockSize = 64.0
+blocks = BlockArray.BlockArray(10, 7)
 
 
-blockField = pyglet.graphics.vertex_list(blocksX * blocksY, 'v2f', 'c3B')
-blockField.vertices = [0.0] * (blocksX * blocksY * 2)
-blockField.colors = [0xFF] * (blocksX * blocksY * 3)
+blockField = pyglet.graphics.vertex_list(blocks.count, 'v2f', 'c4B')
+blockField.vertices = [0.0] * (blocks.count * 2)
+blockField.colors = [0xFF] * (blocks.count * 4)
 
-index = 0
-for x in range(blocksX):
-	blocks[x] = [None] * blocksY
-	for y in range(blocksY):
-		blocks[x][y] = Block.Block()
-		blockField.vertices[index] = ((x * 100.0) + 50.0)
-		blockField.vertices[index+1] = ((y * 100.0) + 50.0)
-		index += 2
-
+for i in range(blocks.count):
+	blockField.vertices[(i * 2)] = ((blocks.getX(i) + 0.5) * blockSize)
+	blockField.vertices[(i * 2) + 1] = ((blocks.getY(i) + 0.5) * blockSize)
 
 @window.event
 def on_draw():
 
-	for x in range(blocksX):
-		for y in range(blocksY):
-			if blocks[x][y].dirty:
-				blockField.colors[(((blocksY * x) + y) * 3):(((blocksY * x) + y) * 3) + 3] = blocks[x][y].color
-				blocks[x][y].clean()
+	for b in range(blocks.count):
+		if blocks[b].dirty:
+			blockField.colors[b * 4:(b * 4) + 3] = blocks[b].color1
+			blocks[b].clean()
 				
 	window.clear()
 	blockField.draw(pyglet.gl.GL_POINTS)
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
-	if (x / 100 < blocksX) and (y/100 < blocksY) and x > 0 and y > 0:
-		blocks[x/100][y/100].color = [random.randint(0, 255),
+	if (x / 64 < blocks.width) and (y/64 < blocks.height) and x > 0 and y > 0:
+		blocks[blocks.getListIndex(x/64,y/64)].color1 = [random.randint(0, 255),
 			random.randint(0, 255),
 			random.randint(0, 255)]
 
