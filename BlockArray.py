@@ -23,7 +23,7 @@ class BlockArray:
 		return self._blocks[x][y]
 
 	def getListIndex(self, x, y):
-		return (x*self._height) + y
+		return (x * self._height) + y
 
 	def getX(self, index):
 		return index / self._height
@@ -40,10 +40,24 @@ class BlockArray:
 	def getCount(self):
 		return self._height * self._width
 
+	def getAdjacent(self, index):
+		adj = []
+		x = self.getX(index)
+		y = self.getY(index)
+		if (x-1) >= 0:
+			adj.append(self.getListIndex(x-1,y))
+		if (x+1) < self._width:
+			adj.append(self.getListIndex(x+1,y))
+		if (y-1) >= 0:
+			adj.append(self.getListIndex(x,y-1))
+		if (y+1) < self._height:
+			adj.append(self.getListIndex(x,y+1))
+		return adj
+
 	def remove(self, value):
 		self.__getitem__(value).hide()
 
-	def remove(self, x, y):
+	def remove2d(self, x, y):
 		self._blocks[x][y].hide()
 
 	def compress(self):
@@ -70,6 +84,24 @@ class BlockArray:
 
 		self._blocks.extend(hiddenColumns)
 		
+
+	def findGroup(self, x, y):
+		indices = []
+		indices.append(self.getListIndex(x,y))
+		
+		for i in indices:
+			for adj in self.getAdjacent(i):
+				if self[i].isMatch(self[adj]) and adj not in indices:
+					indices.append(adj)
+
+		return indices
+
+
+	def deleteGroup(self, indices):
+		for i in indices:
+			self.remove(i)
+
+		self.compress()
 
 
 

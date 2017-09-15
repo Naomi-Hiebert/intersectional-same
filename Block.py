@@ -3,14 +3,14 @@ import random
 class Block:
 
 	colorTable1 = 	[[0xFF, 0xFF, 0x00],
-					 [0x00, 0xFF, 0xFF],
-					 [0xFF, 0x00, 0xFF],
-					 [0x00, 0xFF, 0x00]]
+					 [0x88, 0x88, 0x00],
+					 [0x00, 0x00, 0xCC],
+					 [0x66, 0x66, 0xFF]]
 
 	colorTable2 = 	[[0xFF, 0xFF, 0xFF],
-					 [0xCC, 0xCC, 0xCC],
-					 [0x99, 0x99, 0x99],
-					 [0x66, 0x66, 0x66]]
+					 [0xBB, 0xBB, 0xBB],
+					 [0x88, 0x88, 0x88],
+					 [0x44, 0x44, 0x44]]
 
 	def __init__(self):
 		self._active = 0
@@ -98,6 +98,14 @@ class Block:
 		self._color1 = r / 4
 		self._color2 = r % 4
 		self._dirty = True
+
+	def isMatch(self, other):
+		if self._visible and other.visible:
+			if self._active == 1 and self.color1 == other.color1:
+				return True
+			if self._active == 2 and self.color2 == other.color2:
+				return True
+		return False
 
 	color1 = property(getColor1, setColor1)
 	color2 = property(getColor2, setColor2)
