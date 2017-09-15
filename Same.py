@@ -27,7 +27,6 @@ pointField1 = pyglet.graphics.vertex_list(blocks.count, 'v2f', 'c4B')
 pointField1.vertices = [0.0] * (blocks.count * 2)
 pointField1.colors = [0xFF] * (blocks.count * 4)
 
-
 pointField2 = pyglet.graphics.vertex_list(blocks.count, 'v2f', 'c4B')
 pointField2.vertices = [0.0] * (blocks.count * 2)
 pointField2.colors = [0xFF] * (blocks.count * 4)
@@ -67,9 +66,10 @@ def on_draw():
 
 	for b in range(blocks.count):
 		if blocks[b].dirty:
-			pointField1.colors[b * 4:(b+1) * 4] = blocks[b].color1
-			pointField2.colors[b * 4:(b+1) * 4] = blocks[b].color2
-			triField.colors[b * 24:(b+1) * 24] = blocks[b].color1 * 6
+			pointField1.colors[b * 4:(b+1) * 4] = blocks[b].showColor1()
+			pointField2.colors[b * 4:(b+1) * 4] = blocks[b].showColor2()
+			triField.colors[b * 24:(b * 24) + 12] = blocks[b].showActive2() * 3
+			triField.colors[(b * 24) + 12:(b * 24) + 24] = blocks[b].showActive1() * 3
 			blocks[b].clean()
 				
 	window.clear()
@@ -82,10 +82,26 @@ def on_mouse_press(x, y, button, modifiers):
 
 	indexX = x/blockSize
 	indexY = y/blockSize
-	if indexX < blocks.width and indexY < blocks.height and x > 0 and y > 0:
-		listIndex = blocks.getListIndex(indexX, indexY)
-		blocks[listIndex].color2 = blocks[listIndex].color1
-		blocks[listIndex].color1 = [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 0xFF]
+	if indexX < blocks.width and indexY < blocks.height and x >= 0 and y >= 0:
+		blocks.remove(indexX, indexY)
+		blocks.compress()
+
+@window.event
+def on_key_press(symbol, modifiers):
+	
+	if symbol == pyglet.window.key.SPACE:
+		for b in range(blocks.count):
+			blocks[b].setActive(2)
+
+@window.event
+def on_key_release(symbol, modifiers):
+	
+	if symbol == pyglet.window.key.SPACE:
+		for b in range(blocks.count):
+			blocks[b].setActive(1)
+
+
+	
 
 
 pyglet.app.run()
