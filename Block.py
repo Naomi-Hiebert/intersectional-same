@@ -13,7 +13,7 @@ class Block:
 					 [0x44, 0x44, 0x44]]
 
 	def __init__(self):
-		self._active = 0
+		self._active = 1
 		self._color1 = 0
 		self._color2 = 0
 		self._dirty = True

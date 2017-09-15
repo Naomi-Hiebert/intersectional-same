@@ -12,7 +12,7 @@ halfBorder = 1.0
 height = 24
 width = 36
 
-#ugly global variables
+#ugly global variables for visual effects
 hoverGroup = []
 
 #initialize the most important data structure
@@ -174,6 +174,10 @@ def on_mouse_motion(x, y, dx, dy):
 				unHighlight()
 	else:
 		unHighlight()
+
+@window.event
+def on_mouse_leave(x,y):
+	unHighlight()
 
 
 	
