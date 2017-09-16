@@ -139,7 +139,7 @@ def on_mouse_press(x, y, button, modifiers):
 	if indexX < blocks.width and indexY < blocks.height and x >= 0 and y >= 0:
 		delGroup = blocks.findGroup(indexX,indexY)
 
-		if delGroup.count >= 3:
+		if len(delGroup) >= 3:
 			unHighlight()
 			blocks.deleteGroup(delGroup)
 		
